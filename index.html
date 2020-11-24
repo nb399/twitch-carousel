@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Twitch Carousel</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <!-- STYLES -->
+
+        <style {csp-style-nonce}>
+            html, body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .container {
+                width: 100%;
+            }
+
+            .container .carousel {
+                /* 크기 */
+                width: 100%;
+
+                /* 레이어웃 */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                /* 위치 */
+                position: relative;
+
+                /* 여백 */
+                margin-top: 10vh;
+            }
+
+            .container .carousel .carousel-item {
+                /* 크기 */
+                width: 33.3%;
+
+                /* 레이어웃 */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                
+                /* 폰트 */
+                font-weight: bold;
+                font-size: 10vh;
+                color: white;
+                
+                /* 위치 */
+                position: absolute;
+                top: 0;
+
+                /* 효과 
+                cursor: pointer;*/
+            }
+
+            .container .carousel .carousel-item.stack-top {
+                background-color: aqua;
+                z-index: 3;
+                height: 50vh;
+            }
+
+            .container .carousel .carousel-item.stack-middle {
+                background-color: bisque;
+                z-index: 2;
+                height: 45vh;
+                margin: 2.5vh 0;
+            }
+
+            .container .carousel .carousel-item.stack-middle.left {
+                left: 20vw;
+            }
+
+            .container .carousel .carousel-item.stack-middle.right {
+                right: 20vw;
+            }
+
+            .container .carousel .carousel-item.stack-bottom {
+                background-color: cadetblue;
+                z-index: 1;
+                height: 40vh;
+                margin: 5vh 0;
+            }
+
+            .container .carousel .carousel-item.stack-bottom.left {
+                left: 10vw;
+            }
+
+            .container .carousel .carousel-item.stack-bottom.right {
+                right: 10vw;
+            }
+
+            @media (max-width: 700px) {
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div id="carousel" class="carousel">
+                <div id="carousel-item-1" class="carousel-item stack-top" onclick="makeStackTop('carousel-item-1')">
+                    1
+                </div>
+                <div id="carousel-item-2" class="carousel-item stack-middle left" onclick="makeStackTop('carousel-item-2')">
+                    2
+                </div>
+                <div id="carousel-item-3" class="carousel-item stack-middle right" onclick="makeStackTop('carousel-item-3')">
+                    3
+                </div>
+                <div id="carousel-item-4" class="carousel-item stack-bottom left" onclick="makeStackTop('carousel-item-4')">
+                    4
+                </div>
+                <div id="carousel-item-5" class="carousel-item stack-bottom right" onclick="makeStackTop('carousel-item-5')">
+                    5
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script>
+
+        var carousel = $("#carousel").children();
+
+        function getStackTopElemID()
+        {
+            var elemStackTopID = "";
+
+            carousel.each(function(index) {
+                //console.log($(this).attr("class"));
+                if($(this).attr("class").includes("stack-top"))
+                    elemStackTopID = $(this).attr("id");
+            });
+            
+            //console.log("getStackTopElemID():", elemStackTopID);
+            return elemStackTopID;
+        } 
+
+        function makeStackTop(elemID)
+        {
+            var curStackTopElem = $('#'+getStackTopElemID());
+            var curElem = $('#'+elemID);
+            curStackTopElem.attr("class", curElem.attr("class"));
+            curElem.attr("class", "carousel-item stack-top");
+            //console.log(carousel);
+        }
+
+    </script>
+</html>
