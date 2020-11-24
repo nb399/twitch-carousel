@@ -98,16 +98,16 @@
     <body>
         <div class="container">
             <div id="carousel" class="carousel">
-                <div id="carousel-item-1" class="carousel-item stack-top" onclick="makeStackTop('carousel-item-1')">
+                <div id="carousel-item-1" class="carousel-item stack-bottom left" onclick="makeStackTop('carousel-item-1')">
                     1
                 </div>
                 <div id="carousel-item-2" class="carousel-item stack-middle left" onclick="makeStackTop('carousel-item-2')">
                     2
                 </div>
-                <div id="carousel-item-3" class="carousel-item stack-middle right" onclick="makeStackTop('carousel-item-3')">
+                <div id="carousel-item-3" class="carousel-item stack-top" onclick="makeStackTop('carousel-item-3')">
                     3
                 </div>
-                <div id="carousel-item-4" class="carousel-item stack-bottom left" onclick="makeStackTop('carousel-item-4')">
+                <div id="carousel-item-4" class="carousel-item stack-middle right" onclick="makeStackTop('carousel-item-4')">
                     4
                 </div>
                 <div id="carousel-item-5" class="carousel-item stack-bottom right" onclick="makeStackTop('carousel-item-5')">
@@ -119,13 +119,14 @@
 
     <script>
 
-        var carousel = $("#carousel").children();
+        const carousel = $("#carousel");
+        const stackClassNameArr = ["stack-bottom left", "stack-middle left", "stack-top", "stack-middle right", "stack-bottom right"];
 
         function getStackTopElemID()
         {
             var elemStackTopID = "";
 
-            carousel.each(function(index) {
+            carousel.children().each(function() {
                 //console.log($(this).attr("class"));
                 if($(this).attr("class").includes("stack-top"))
                     elemStackTopID = $(this).attr("id");
@@ -133,15 +134,27 @@
             
             //console.log("getStackTopElemID():", elemStackTopID);
             return elemStackTopID;
-        } 
+        }
 
         function makeStackTop(elemID)
         {
-            var curStackTopElem = $('#'+getStackTopElemID());
+            /*var curStackTopElem = $('#'+getStackTopElemID());
             var curElem = $('#'+elemID);
             curStackTopElem.attr("class", curElem.attr("class"));
-            curElem.attr("class", "carousel-item stack-top");
-            //console.log(carousel);
+            curElem.attr("class", "carousel-item stack-top");*/
+
+            var curIdx = 0; // 배열의 방향과 이동거리를 나타내기 위함
+
+            carousel.children().each(function(index) {
+                if($(this).attr("id") === elemID) curIdx = index;
+            });
+
+            carousel.children().each(function(index) {
+                //$(this).attr("class", stackClassNameArr[(i+1) - (curIdx - 3)]);
+                console.log($(this).attr("class"));
+            });
+
+            //console.log(carousel.children());
         }
 
     </script>
