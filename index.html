@@ -51,8 +51,8 @@
                 position: absolute;
                 top: 0;
 
-                /* 효과 
-                cursor: pointer;*/
+                /* 효과 */
+                cursor: pointer;
             }
 
             .container .carousel .carousel-item.stack-top {
@@ -98,19 +98,19 @@
     <body>
         <div class="container">
             <div id="carousel" class="carousel">
-                <div id="carousel-item-1" class="carousel-item stack-bottom left" onclick="makeStackTop('carousel-item-1')">
+                <div id="carousel-item-1" class="carousel-item stack-bottom left" onclick="updateStackTop('carousel-item-1')">
                     1
                 </div>
-                <div id="carousel-item-2" class="carousel-item stack-middle left" onclick="makeStackTop('carousel-item-2')">
+                <div id="carousel-item-2" class="carousel-item stack-middle left" onclick="updateStackTop('carousel-item-2')">
                     2
                 </div>
-                <div id="carousel-item-3" class="carousel-item stack-top" onclick="makeStackTop('carousel-item-3')">
+                <div id="carousel-item-3" class="carousel-item stack-top" onclick="updateStackTop('carousel-item-3')">
                     3
                 </div>
-                <div id="carousel-item-4" class="carousel-item stack-middle right" onclick="makeStackTop('carousel-item-4')">
+                <div id="carousel-item-4" class="carousel-item stack-middle right" onclick="updateStackTop('carousel-item-4')">
                     4
                 </div>
-                <div id="carousel-item-5" class="carousel-item stack-bottom right" onclick="makeStackTop('carousel-item-5')">
+                <div id="carousel-item-5" class="carousel-item stack-bottom right" onclick="updateStackTop('carousel-item-5')">
                     5
                 </div>
             </div>
@@ -136,25 +136,48 @@
             return elemStackTopID;
         }
 
-        function makeStackTop(elemID)
+        function updateStackTop(elemID)
         {
             /*var curStackTopElem = $('#'+getStackTopElemID());
             var curElem = $('#'+elemID);
             curStackTopElem.attr("class", curElem.attr("class"));
             curElem.attr("class", "carousel-item stack-top");*/
 
-            var curIdx = 0; // 배열의 방향과 이동거리를 나타내기 위함
+            var distance = 0;  // 이동거리
+            var direction = 0; // 방향
 
             carousel.children().each(function(index) {
-                if($(this).attr("id") === elemID) curIdx = index;
+                if($(this).attr("id") === elemID)
+                {
+                    distance = index - 2; // index: clicked element index
+
+                    // 인덱스 방향
+                    if(distance > 0)      // 왼쪽
+                        direction = -1;
+                    else if(distance < 0) // 오른쪽
+                        direction = 1;
+                }
             });
 
             carousel.children().each(function(index) {
-                //$(this).attr("class", stackClassNameArr[(i+1) - (curIdx - 3)]);
-                console.log($(this).attr("class"));
+                
+                var updatedIndex = index + (distance * direction);
+
+                if(updatedIndex === -1)      // 1번째 요소        
+                {
+                    $(this).attr("class", "carousel-item "+stackClassNameArr[4]);
+                }
+                else if(updatedIndex === -2) // 5번째 요소
+                {
+                    $(this).attr("class", "carousel-item "+stackClassNameArr[3]);
+                }
+                else                         // 2, 3, 4번째 요소
+                {
+                    $(this).attr("class", "carousel-item "+stackClassNameArr[updatedIndex]);
+                }
             });
 
-            //console.log(carousel.children());
+            console.log(carousel.children());
         }
 
     </script>
