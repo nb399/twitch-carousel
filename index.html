@@ -66,6 +66,12 @@
                 z-index: 2;
                 height: 45vh;
                 margin: 2.5vh 0;
+                /*transition: opacity 0.3s ease, transform 0.2s cubic-bezier(0.25, 0.25, 0.75, 0.75);*/
+                transition: all 0.4s ease-in-out;
+            }
+
+            .container .carousel .carousel-item.stack-middle:hover {
+                transform: scale(1.05);
             }
 
             .container .carousel .carousel-item.stack-middle.left {
@@ -81,6 +87,12 @@
                 z-index: 1;
                 height: 40vh;
                 margin: 5vh 0;
+                /*transition: opacity 0.3s ease, transform 0.2s cubic-bezier(0.25, 0.25, 0.75, 0.75);*/
+                transition: all 0.4s ease-in-out;
+            }
+
+            .container .carousel .carousel-item.stack-bottom:hover {
+                transform: scale(1.05);
             }
 
             .container .carousel .carousel-item.stack-bottom.left {
@@ -149,13 +161,15 @@
             carousel.children().each(function(index) {
                 if($(this).attr("id") === elemID)
                 {
-                    distance = index - 2; // index: clicked element index
+                    distance = index - 2; // 클릭한 요소의 인덱스 값으로 절대값이다
 
                     // 인덱스 방향
                     if(distance > 0)      // 왼쪽
                         direction = -1;
                     else if(distance < 0) // 오른쪽
                         direction = 1;
+                    
+                    distance = Math.abs(distance);
                 }
             });
 
@@ -163,21 +177,29 @@
                 
                 var updatedIndex = index + (distance * direction);
 
-                if(updatedIndex === -1)      // 1번째 요소        
+                if(updatedIndex === -1)
                 {
                     $(this).attr("class", "carousel-item "+stackClassNameArr[4]);
                 }
-                else if(updatedIndex === -2) // 5번째 요소
+                else if(updatedIndex === -2)
                 {
                     $(this).attr("class", "carousel-item "+stackClassNameArr[3]);
                 }
-                else                         // 2, 3, 4번째 요소
+                else if(updatedIndex === 5)
+                {
+                    $(this).attr("class", "carousel-item "+stackClassNameArr[0]);
+                }
+                else if(updatedIndex === 6)
+                {
+                    $(this).attr("class", "carousel-item "+stackClassNameArr[1]);
+                }
+                else
                 {
                     $(this).attr("class", "carousel-item "+stackClassNameArr[updatedIndex]);
                 }
             });
 
-            console.log(carousel.children());
+            //console.log(carousel.children());
         }
 
     </script>
