@@ -33,6 +33,30 @@
                 margin-top: 10vh;
             }
 
+            .container .carousel #carousel-item-1 {
+                background-color: cadetblue;
+            }
+
+            .container .carousel #carousel-item-2 {
+                background-color: bisque;
+            }
+
+            .container .carousel #carousel-item-3 {
+                background-color: aqua;
+            }
+
+            .container .carousel #carousel-item-4 {
+                background-color: blueviolet;
+            }
+
+            .container .carousel #carousel-item-5 {
+                background-color: chartreuse;
+            }
+
+            .container .carousel #carousel-item-6 {
+                background-color: cornflowerblue;
+            }
+
             .container .carousel .carousel-item {
                 /* 크기 */
                 width: 33.3%;
@@ -55,19 +79,19 @@
                 cursor: pointer;
             }
 
+            /* 탑 */
             .container .carousel .carousel-item.stack-top {
-                background-color: aqua;
-                z-index: 3;
+                z-index: 4;
                 height: 50vh;
+                transition: all 0.2s ease-in-out;
             }
 
+            /* 미들 */
             .container .carousel .carousel-item.stack-middle {
-                background-color: bisque;
-                z-index: 2;
+                z-index: 3;
                 height: 45vh;
                 margin: 2.5vh 0;
-                /*transition: opacity 0.3s ease, transform 0.2s cubic-bezier(0.25, 0.25, 0.75, 0.75);*/
-                transition: all 0.4s ease-in-out;
+                transition: all 0.2s ease-in-out;
             }
 
             .container .carousel .carousel-item.stack-middle:hover {
@@ -82,13 +106,12 @@
                 right: 20vw;
             }
 
+            /* 바텀 */
             .container .carousel .carousel-item.stack-bottom {
-                background-color: cadetblue;
-                z-index: 1;
+                z-index: 2;
                 height: 40vh;
                 margin: 5vh 0;
-                /*transition: opacity 0.3s ease, transform 0.2s cubic-bezier(0.25, 0.25, 0.75, 0.75);*/
-                transition: all 0.4s ease-in-out;
+                transition: all 0.2s ease-in-out;
             }
 
             .container .carousel .carousel-item.stack-bottom:hover {
@@ -100,7 +123,31 @@
             }
 
             .container .carousel .carousel-item.stack-bottom.right {
+                opacity: 1;
                 right: 10vw;
+            }
+
+            /* 히든 */
+            .container .carousel .carousel-item.stack-hidden {
+                opacity: 0;
+                z-index: 1;
+                height: 35vh;
+                margin: 7.5vh 0;
+                transition: all 0.2s ease-in-out;
+            }
+
+            .container .carousel .carousel-item.stack-hidden.left {
+                left: 5vw;
+            }
+
+            .container .carousel .carousel-item.stack-hidden.right {
+                right: 5vw;
+            }
+
+            /* 애니메이션 */
+            .container .carousel .carousel-item.stack-hidden.left.out {
+                opacity: 0;
+                transform: scale(0.5) translate(-50%, 0);
             }
 
             @media (max-width: 700px) {
@@ -119,11 +166,14 @@
                 <div id="carousel-item-3" class="carousel-item stack-top" onclick="updateStackTop('carousel-item-3')">
                     3
                 </div>
-                <div id="carousel-item-4" class="carousel-item stack-middle right" onclick="updateStackTop('carousel-item-4')">
+                <div id="carousel-item-4" class="carousel-item stack-middle right" onclick="acceptAnim()">
                     4
                 </div>
                 <div id="carousel-item-5" class="carousel-item stack-bottom right" onclick="updateStackTop('carousel-item-5')">
                     5
+                </div>
+                <div id="carousel-item-6" class="carousel-item stack-hidden right" onclick="updateStackTop('carousel-item-6')">
+                    6
                 </div>
             </div>
         </div>
@@ -148,6 +198,7 @@
             return elemStackTopID;
         }
 
+        /* 기본 */
         function updateStackTop(elemID)
         {
             /*var curStackTopElem = $('#'+getStackTopElemID());
@@ -200,6 +251,38 @@
             });
 
             //console.log(carousel.children());
+        }
+
+        /* 업그레이드 */
+        function acceptAnim()
+        {
+            carousel.children().each(function(index) {
+
+                if(index === 0)
+                {
+                    $(this).attr("class", "carousel-item stack-hidden left out");
+                }
+                else if(index === 1)
+                {
+                    $(this).attr("class", "carousel-item stack-bottom left");
+                }
+                else if(index === 2)
+                {
+                    $(this).attr("class", "carousel-item stack-middle left");
+                }
+                else if(index === 3)
+                {
+                    $(this).attr("class", "carousel-item stack-top");
+                }
+                else if(index === 4)
+                {
+                    $(this).attr("class", "carousel-item stack-middle right");
+                }
+                else
+                {
+                    $(this).attr("class", "carousel-item stack-bottom right");
+                }
+            });
         }
 
     </script>
