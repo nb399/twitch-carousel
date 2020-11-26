@@ -406,8 +406,8 @@
             console.log(tempArr);
         }*/
 
-        // 업그레이드5
-        // 방향 추가
+        // 배열 요소 이동시키기 완성
+        // 오른쪽, 왼쪽 모두 가능
         function acceptAnim(elemID)
         {
             // 배열
@@ -422,26 +422,16 @@
 
             var tempArr = [];
             var distance = 0;
-            var direction = 0;
 
             for(var i = 0; i < carouselElemIDArr.length; i++)
-            {
-                if(elemID === carouselElemIDArr[i])
-                {
-                    distance = i - 2; // 클릭한 요소의 인덱스 값으로 절대값이다
-                    //distance = Math.abs(distance);
-                    // 인덱스 방향
-                    if(distance > 0)    
-                        direction = 1;  // 왼쪽
-                    else if(distance < 0)
-                        direction = -1; // 오른쪽
-                }
-            }
+                if(elemID === carouselElemIDArr[i]) distance = i - 2; // 클릭한 요소의 인덱스 값
 
             for(var i = 0; i < 6; i++)
             {
                 if(i + distance < 0)
                     tempArr[i] = carouselElemIDArr[(6+i) - Math.abs(distance)];
+                else if(i + distance > 5)
+                    tempArr[i] = carouselElemIDArr[Math.abs(distance) - (6-i)];
                 else
                     tempArr[i] = carouselElemIDArr[i + distance];
             }
