@@ -129,7 +129,7 @@
 
             /* 히든 */
             .container .carousel .carousel-item.stack-hidden {
-                opacity: 0;
+                opacity: 1;
                 z-index: 1;
                 height: 35vh;
                 margin: 7.5vh 0;
@@ -146,7 +146,7 @@
 
             /* 애니메이션 */
             .container .carousel .carousel-item.stack-hidden.left.out {
-                opacity: 0;
+                opacity: 1;
                 transform: scale(0.5) translate(-50%, 0);
             }
 
@@ -157,22 +157,22 @@
     <body>
         <div class="container">
             <div id="carousel" class="carousel">
-                <div id="carousel-item-1" class="carousel-item stack-bottom left" onclick="updateStackTop('carousel-item-1')">
+                <div id="carousel-item-1" class="carousel-item stack-bottom left" onclick="acceptAnim('carousel-item-1')">
                     1
                 </div>
-                <div id="carousel-item-2" class="carousel-item stack-middle left" onclick="updateStackTop('carousel-item-2')">
+                <div id="carousel-item-2" class="carousel-item stack-middle left" onclick="acceptAnim('carousel-item-2')">
                     2
                 </div>
-                <div id="carousel-item-3" class="carousel-item stack-top" onclick="updateStackTop('carousel-item-3')">
+                <div id="carousel-item-3" class="carousel-item stack-top" onclick="acceptAnim('carousel-item-3')">
                     3
                 </div>
-                <div id="carousel-item-4" class="carousel-item stack-middle right" onclick="acceptAnim()">
+                <div id="carousel-item-4" class="carousel-item stack-middle right" onclick="acceptAnim('carousel-item-4')">
                     4
                 </div>
-                <div id="carousel-item-5" class="carousel-item stack-bottom right" onclick="updateStackTop('carousel-item-5')">
+                <div id="carousel-item-5" class="carousel-item stack-bottom right" onclick="acceptAnim('carousel-item-5')">
                     5
                 </div>
-                <div id="carousel-item-6" class="carousel-item stack-hidden right" onclick="updateStackTop('carousel-item-6')">
+                <div id="carousel-item-6" class="carousel-item stack-hidden right" onclick="acceptAnim('carousel-item-6')">
                     6
                 </div>
             </div>
@@ -181,11 +181,18 @@
 
     <script>
 
-        const carousel = $("#carousel");
-        const stackClassNameArr = ["stack-bottom left", "stack-middle left", "stack-top", "stack-middle right", "stack-bottom right"];
+        //const carousel = $("#carousel");
+        const stackClassNameArr = [
+            "carousel-item stack-bottom left", 
+            "carousel-item stack-middle left", 
+            "carousel-item stack-top", 
+            "carousel-item stack-middle right", 
+            "carousel-item stack-bottom right", 
+            "carousel-item stack-hidden right"];
 
         function getStackTopElemID()
         {
+            var carousel = $("#carousel");
             var elemStackTopID = "";
 
             carousel.children().each(function() {
@@ -206,6 +213,7 @@
             curStackTopElem.attr("class", curElem.attr("class"));
             curElem.attr("class", "carousel-item stack-top");*/
 
+            var carousel = $("#carousel");
             var distance = 0;  // 이동거리
             var direction = 0; // 방향
 
@@ -253,9 +261,11 @@
             //console.log(carousel.children());
         }
 
-        /* 업그레이드 */
-        function acceptAnim()
+        /* 업그레이드1 
+        function acceptAnim() // parameter: acceptAnim(distance) => middle 1, bottom 2
         {
+            var carousel = $("#carousel");
+
             carousel.children().each(function(index) {
 
                 if(index === 0)
@@ -283,6 +293,159 @@
                     $(this).attr("class", "carousel-item stack-bottom right");
                 }
             });
+
+            setTimeout(function() {
+                $('#'+hiddenElemID).attr("class", "carousel-item stack-hidden right");
+            }, 250);
+        }*/
+
+        // 업그레이드2
+        // 왼쪽으로 1칸 이동(4번째 인덱스만) 
+        /*function acceptAnim(elemID)
+        {
+            // 배열
+            var carouselElemIDArr = [
+                "carousel-item-1", // 0
+                "carousel-item-2", // 1
+                "carousel-item-3", // 2
+                "carousel-item-4", // 3
+                "carousel-item-5", // 4
+                "carousel-item-6", // 5
+                ];
+
+            var tempArr = [];
+            var distance = 0;
+            
+            for(var i = 0; i < carouselElemIDArr.length; i++)
+            {
+                if(elemID === carouselElemIDArr[i])
+                {
+                    distance = i - 2;              // 클릭한 요소의 인덱스 값
+                    distance = Math.abs(distance); // 거리이므로 절대값
+                }
+            }
+
+            for(var i = 0; i < 6; i++)
+            {
+                if(i + distance > 5)
+                    tempArr[i] = carouselElemIDArr[0];
+                else
+                    tempArr[i] = carouselElemIDArr[i + distance]; // 0 = 0+1, 1 = 1+1 ... 4 = 4+1, 5(max length) = 5+1
+            }
+        }*/
+
+        // 업그레이드3
+        // 왼쪽으로 1칸, 2칸 이동(4번째, 5번째 인덱스)
+        /*function acceptAnim(elemID)
+        {
+            // 배열
+            var carouselElemIDArr = [
+                "carousel-item-1", // 0
+                "carousel-item-2", // 1
+                "carousel-item-3", // 2
+                "carousel-item-4", // 3
+                "carousel-item-5", // 4
+                "carousel-item-6", // 5
+                ];
+
+            var tempArr = [];
+            var distance = 0;
+            
+            for(var i = 0; i < carouselElemIDArr.length; i++)
+            {
+                if(elemID === carouselElemIDArr[i])
+                {
+                    distance = i - 2;              // 클릭한 요소의 인덱스 값
+                    distance = Math.abs(distance); // 거리이므로 절대값
+                }
+            }
+
+            for(var i = 0; i < 6; i++)
+            {
+                if(i + distance > 5)
+                    tempArr[i] = carouselElemIDArr[distance - (6-i)];
+                else
+                    tempArr[i] = carouselElemIDArr[i + distance];
+            }
+            console.log(tempArr);
+        }*/
+
+        // 업그레이드4
+        // 오른왼쪽으로 1칸, 2칸 이동(2번째, 1번째 인덱스)
+        /*function acceptAnim(elemID)
+        {
+            // 배열
+            var carouselElemIDArr = [
+                "carousel-item-1", // 0
+                "carousel-item-2", // 1
+                "carousel-item-3", // 2
+                "carousel-item-4", // 3
+                "carousel-item-5", // 4
+                "carousel-item-6", // 5
+                ];
+
+            var tempArr = [];
+            var distance = 0;
+
+            for(var i = 0; i < carouselElemIDArr.length; i++)
+            {
+                if(elemID === carouselElemIDArr[i])
+                {
+                    distance = i - 2;              // 클릭한 요소의 인덱스 값
+                    //distance = Math.abs(distance); // 거리이므로 절대값
+                }
+            }
+
+            for(var i = 0; i < 6; i++)
+            {
+                if(i + distance < 0)
+                    tempArr[i] = carouselElemIDArr[(6+i) - Math.abs(distance)];
+                else
+                    tempArr[i] = carouselElemIDArr[i + distance];
+            }
+            console.log(tempArr);
+        }*/
+
+        // 업그레이드5
+        // 방향 추가
+        function acceptAnim(elemID)
+        {
+            // 배열
+            var carouselElemIDArr = [
+                "carousel-item-1", // 0
+                "carousel-item-2", // 1
+                "carousel-item-3", // 2
+                "carousel-item-4", // 3
+                "carousel-item-5", // 4
+                "carousel-item-6", // 5
+                ];
+
+            var tempArr = [];
+            var distance = 0;
+            var direction = 0;
+
+            for(var i = 0; i < carouselElemIDArr.length; i++)
+            {
+                if(elemID === carouselElemIDArr[i])
+                {
+                    distance = i - 2; // 클릭한 요소의 인덱스 값으로 절대값이다
+                    //distance = Math.abs(distance);
+                    // 인덱스 방향
+                    if(distance > 0)    
+                        direction = 1;  // 왼쪽
+                    else if(distance < 0)
+                        direction = -1; // 오른쪽
+                }
+            }
+
+            for(var i = 0; i < 6; i++)
+            {
+                if(i + distance < 0)
+                    tempArr[i] = carouselElemIDArr[(6+i) - Math.abs(distance)];
+                else
+                    tempArr[i] = carouselElemIDArr[i + distance];
+            }
+            console.log(tempArr);
         }
 
     </script>
