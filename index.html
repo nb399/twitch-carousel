@@ -129,7 +129,7 @@
 
             /* 히든 */
             .container .carousel .carousel-item.stack-hidden {
-                opacity: 1;
+                opacity: 0;
                 z-index: 1;
                 height: 35vh;
                 margin: 7.5vh 0;
@@ -146,7 +146,7 @@
 
             /* 애니메이션 */
             .container .carousel .carousel-item.stack-hidden.left.out {
-                opacity: 1;
+                opacity: 0;
                 transform: scale(0.5) translate(-50%, 0);
             }
 
@@ -182,15 +182,43 @@
     <script>
 
         //const carousel = $("#carousel");
-        const stackClassNameArr = [
+        /*const stackClassNameArr = [
             "carousel-item stack-bottom left", 
             "carousel-item stack-middle left", 
             "carousel-item stack-top", 
             "carousel-item stack-middle right", 
             "carousel-item stack-bottom right", 
-            "carousel-item stack-hidden right"];
+            "carousel-item stack-hidden right"];*/
 
-        function getStackTopElemID()
+        // 배열
+        var carouselElemIDArr = [
+                "carousel-item-1", // 0
+                "carousel-item-2", // 1
+                "carousel-item-3", // 2
+                "carousel-item-4", // 3
+                "carousel-item-5", // 4
+                "carousel-item-6", // 5
+            ]; // 가변
+
+        /*const carouselClassArr = [
+            "carousel-item stack-bottom left",
+            "carousel-item stack-middle left",
+            "carousel-item stack-top",
+            "carousel-item stack-middle right",
+            "carousel-item stack-bottom right",
+            "carousel-item stack-hidden right"
+        ];*/
+
+        const carouselClassArr = [
+            "carousel-item stack-hidden left out",
+            "carousel-item stack-bottom left",
+            "carousel-item stack-middle left",
+            "carousel-item stack-top",
+            "carousel-item stack-middle right",
+            "carousel-item stack-bottom right"
+        ]; // 고정
+
+        /*function getStackTopElemID()
         {
             var carousel = $("#carousel");
             var elemStackTopID = "";
@@ -203,15 +231,15 @@
             
             //console.log("getStackTopElemID():", elemStackTopID);
             return elemStackTopID;
-        }
+        }*/
 
-        /* 기본 */
-        function updateStackTop(elemID)
+        // 기본
+        /*function updateStackTop(elemID)
         {
-            /*var curStackTopElem = $('#'+getStackTopElemID());
-            var curElem = $('#'+elemID);
-            curStackTopElem.attr("class", curElem.attr("class"));
-            curElem.attr("class", "carousel-item stack-top");*/
+            //var curStackTopElem = $('#'+getStackTopElemID());
+            //var curElem = $('#'+elemID);
+            //curStackTopElem.attr("class", curElem.attr("class"));
+            //curElem.attr("class", "carousel-item stack-top");
 
             var carousel = $("#carousel");
             var distance = 0;  // 이동거리
@@ -259,18 +287,19 @@
             });
 
             //console.log(carousel.children());
-        }
+        }*/
 
-        /* 업그레이드1 
-        function acceptAnim() // parameter: acceptAnim(distance) => middle 1, bottom 2
+        // 업그레이드1 
+        /*function acceptAnim()
         {
             var carousel = $("#carousel");
-
+            var hiddenElemID = "";
             carousel.children().each(function(index) {
 
                 if(index === 0)
                 {
                     $(this).attr("class", "carousel-item stack-hidden left out");
+                    hiddenElemID = $(this).attr("id");
                 }
                 else if(index === 1)
                 {
@@ -301,7 +330,7 @@
 
         // 업그레이드2
         // 왼쪽으로 1칸 이동(4번째 인덱스만) 
-        /*function acceptAnim(elemID)
+        /*function moveArray(elemID)
         {
             // 배열
             var carouselElemIDArr = [
@@ -336,7 +365,7 @@
 
         // 업그레이드3
         // 왼쪽으로 1칸, 2칸 이동(4번째, 5번째 인덱스)
-        /*function acceptAnim(elemID)
+        /*function moveArray(elemID)
         {
             // 배열
             var carouselElemIDArr = [
@@ -372,7 +401,7 @@
 
         // 업그레이드4
         // 오른왼쪽으로 1칸, 2칸 이동(2번째, 1번째 인덱스)
-        /*function acceptAnim(elemID)
+        /*function moveArray(elemID)
         {
             // 배열
             var carouselElemIDArr = [
@@ -396,7 +425,7 @@
                 }
             }
 
-            for(var i = 0; i < 6; i++)
+            for(var i = 0; i < carouselElemIDArr.length; i++)
             {
                 if(i + distance < 0)
                     tempArr[i] = carouselElemIDArr[(6+i) - Math.abs(distance)];
@@ -408,22 +437,12 @@
 
         // 배열 요소 이동시키기 완성
         // 오른쪽, 왼쪽 모두 가능
-        function acceptAnim(elemID)
+        /*function moveArray(elemID)
         {
-            // 배열
-            var carouselElemIDArr = [
-                "carousel-item-1", // 0
-                "carousel-item-2", // 1
-                "carousel-item-3", // 2
-                "carousel-item-4", // 3
-                "carousel-item-5", // 4
-                "carousel-item-6", // 5
-                ];
-
             var tempArr = [];
             var distance = 0;
 
-            for(var i = 0; i < carouselElemIDArr.length; i++)
+            for(var i = 0; i < 6; i++)
                 if(elemID === carouselElemIDArr[i]) distance = i - 2; // 클릭한 요소의 인덱스 값
 
             for(var i = 0; i < 6; i++)
@@ -435,7 +454,157 @@
                 else
                     tempArr[i] = carouselElemIDArr[i + distance];
             }
+
             console.log(tempArr);
+        }*/
+
+        // 애니메이션 적용
+        // 1. 현재 요소들에게 애니메이션 적용
+        // 2. 배열이동
+        // 3. 애니메이션 적용 횟수
+        // 3-1. 애니메이션을 순서대로 2번 적용
+        function acceptAnim(elemID)
+        {
+            var tempCarouselElemIDArr = carouselElemIDArr;
+            var distance = 0;
+
+            for(var i = 0; i < 6; i++)
+                if(elemID === tempCarouselElemIDArr[i]) distance = Math.abs(i - 2); // 클릭한 요소의 인덱스 값
+
+            for(var i = 0; i < 6; i++)
+                delayAnim(tempCarouselElemIDArr[i], i, distance);
+
+            moveArray(elemID);
+        }
+
+        function moveArray(elemID)
+        {
+            var tempArr = [];
+            var distance = 0;
+
+            for(var i = 0; i < 6; i++)
+                if(elemID === carouselElemIDArr[i]) distance = i - 2; // 클릭한 요소의 인덱스 값
+
+            for(var i = 0; i < 6; i++)
+            {
+                if(i + distance < 0)
+                    tempArr[i] = carouselElemIDArr[(6+i) - Math.abs(distance)];
+                else if(i + distance > 5)
+                    tempArr[i] = carouselElemIDArr[Math.abs(distance) - (6-i)];
+                else
+                    tempArr[i] = carouselElemIDArr[i + distance];
+            }
+
+            carouselElemIDArr = tempArr;
+            console.log(tempArr);
+            //return tempArr;
+        }
+
+        function delayAnim(elemID, index, distance)
+        {
+            if(distance === 1)
+            {
+                if(index === 0)
+                {
+                    //$('#'+elemID).attr("class", "carousel-item stack-bottom left"); // 애니메이션 적용 전
+                    $('#'+elemID).attr("class", "carousel-item stack-hidden left out");
+
+                    setTimeout(function() {
+                        $('#'+elemID).attr("class", "carousel-item stack-hidden right");
+                    }, 200);
+                }
+                else if(index === 1)
+                {
+                    //$('#'+elemID).attr("class", "carousel-item stack-middle left"); // 애니메이션 적용 전
+                    $('#'+elemID).attr("class", "carousel-item stack-bottom left");
+                }
+                else if(index === 2)
+                {
+                    //$('#'+elemID).attr("class", "carousel-item stack-top"); // 애니메이션 적용 전
+                    $('#'+elemID).attr("class", "carousel-item stack-middle left");
+                }
+                else if(index === 3)
+                {
+                    //$('#'+elemID).attr("class", "carousel-item stack-middle right"); // 애니메이션 적용 전
+                    $('#'+elemID).attr("class", "carousel-item stack-top");
+                }
+                else if(index === 4)
+                {
+                    //$('#'+elemID).attr("class", "carousel-item stack-bottom right"); // 애니메이션 적용 전
+                    $('#'+elemID).attr("class", "carousel-item stack-middle right");
+                }
+                else
+                {
+                    //$('#'+elemID).attr("class", "carousel-item stack-hidden left"); // 애니메이션 적용 전
+                    $('#'+elemID).attr("class", "carousel-item stack-bottom right");
+                }
+            }
+            else if(distance === 2)
+            {
+                if(index === 0)
+                {
+                    //$('#'+elemID).attr("class", "carousel-item stack-bottom left"); // 애니메이션 적용 전
+                    $('#'+elemID).attr("class", "carousel-item stack-hidden left out");
+
+                    setTimeout(function() {
+                        $('#'+elemID).attr("class", "carousel-item stack-hidden right");
+                    }, 200);
+
+                    setTimeout(function() {
+                        $('#'+elemID).attr("class", "carousel-item stack-bottom right");
+                    }, 200);
+
+                }
+                else if(index === 1)
+                {
+                    //$('#'+elemID).attr("class", "carousel-item stack-middle left"); // 애니메이션 적용 전
+                    $('#'+elemID).attr("class", "carousel-item stack-bottom left");
+
+                    setTimeout(function() {
+                        $('#'+elemID).attr("class", "carousel-item stack-hidden left out");
+                    }, 200);
+
+                    setTimeout(function() {
+                        $('#'+elemID).attr("class", "carousel-item stack-hidden right");
+                    }, 200);
+                }
+                else if(index === 2)
+                {
+                    //$('#'+elemID).attr("class", "carousel-item stack-top"); // 애니메이션 적용 전
+                    $('#'+elemID).attr("class", "carousel-item stack-middle left");
+
+                    setTimeout(function() {
+                        $('#'+elemID).attr("class", "carousel-item stack-bottom left");
+                    }, 200);
+                }
+                else if(index === 3)
+                {
+                    //$('#'+elemID).attr("class", "carousel-item stack-middle right"); // 애니메이션 적용 전
+                    $('#'+elemID).attr("class", "carousel-item stack-top");
+
+                    setTimeout(function() {
+                        $('#'+elemID).attr("class", "carousel-item stack-middle left");
+                    }, 200);
+                }
+                else if(index === 4)
+                {
+                    //$('#'+elemID).attr("class", "carousel-item stack-bottom right"); // 애니메이션 적용 전
+                    $('#'+elemID).attr("class", "carousel-item stack-middle right");
+
+                    setTimeout(function() {
+                        $('#'+elemID).attr("class", "carousel-item stack-top");
+                    }, 200);
+                }
+                else
+                {
+                    //$('#'+elemID).attr("class", "carousel-item stack-hidden right"); // 애니메이션 적용 전
+                    $('#'+elemID).attr("class", "carousel-item stack-bottom right");
+
+                    setTimeout(function() {
+                        $('#'+elemID).attr("class", "carousel-item stack-middle right");
+                    }, 200);
+                }
+            }
         }
 
     </script>
