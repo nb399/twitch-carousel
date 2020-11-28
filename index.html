@@ -134,6 +134,7 @@
                 height: 35vh;
                 margin: 7.5vh 0;
                 transition: all 0.2s ease-in-out;
+                cursor: default;
             }
 
             .container .carousel .carousel-item.stack-hidden.left {
@@ -150,8 +151,11 @@
                 transform: scale(0.5) translate(-50%, 0);
             }
 
-            @media (max-width: 700px) {
+            .container .carousel .carousel-item.stack-hidden.right.out {
+                opacity: 0;
+                transform: scale(0.5) translate(50%, 0);
             }
+
         </style>
     </head>
     <body>
@@ -467,14 +471,28 @@
         {
             var tempCarouselElemIDArr = carouselElemIDArr;
             var distance = 0;
+            var direction = 0;
 
             for(var i = 0; i < 6; i++)
-                if(elemID === tempCarouselElemIDArr[i]) distance = Math.abs(i - 2); // 클릭한 요소의 인덱스 값
+            {
+                if(elemID === tempCarouselElemIDArr[i])
+                {
+                    distance = Math.abs(i - 2); // 클릭한 요소의 인덱스 값
+                    
+                    if((i - 2) > 0)
+                        direction = 1;
+                    else if((i - 2) < 0)
+                        direction = -1;
+                }
+            }
 
-            for(var i = 0; i < 6; i++)
-                delayAnim(tempCarouselElemIDArr[i], i, distance);
-
-            moveArray(elemID);
+            if(direction !== 0 && distance <= 2) // 중간 요소와 가장 오른쪽 숨겨진 요소 클릭 방지
+            {
+                for(var i = 0; i < 6; i++)
+                    delayAnim(tempCarouselElemIDArr[i], i, distance, direction);
+                
+                moveArray(elemID);
+            }
         }
 
         function moveArray(elemID)
@@ -500,109 +518,207 @@
             //return tempArr;
         }
 
-        function delayAnim(elemID, index, distance)
+        function delayAnim(elemID, index, distance, direction)
         {
-            if(distance === 1)
-            {
-                if(index === 0)
-                {
-                    //$('#'+elemID).attr("class", "carousel-item stack-bottom left"); // 애니메이션 적용 전
-                    $('#'+elemID).attr("class", "carousel-item stack-hidden left out");
+            const delay = 130;
 
-                    setTimeout(function() {
-                        $('#'+elemID).attr("class", "carousel-item stack-hidden right");
-                    }, 200);
-                }
-                else if(index === 1)
+            if(direction > 0) // 오른쪽 -> 왼쪽
+            {
+                if(distance === 1)
                 {
-                    //$('#'+elemID).attr("class", "carousel-item stack-middle left"); // 애니메이션 적용 전
-                    $('#'+elemID).attr("class", "carousel-item stack-bottom left");
+                    if(index === 0)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-bottom left"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-hidden left out");
+
+                        setTimeout(function() {
+                            $('#'+elemID).attr("class", "carousel-item stack-hidden right");
+                        }, delay);
+                    }
+                    else if(index === 1)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-middle left"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-bottom left");
+                    }
+                    else if(index === 2)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-top"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-middle left");
+                    }
+                    else if(index === 3)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-middle right"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-top");
+                    }
+                    else if(index === 4)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-bottom right"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-middle right");
+                    }
+                    else
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-hidden left"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-bottom right");
+                    }
                 }
-                else if(index === 2)
+                else if(distance === 2)
                 {
-                    //$('#'+elemID).attr("class", "carousel-item stack-top"); // 애니메이션 적용 전
-                    $('#'+elemID).attr("class", "carousel-item stack-middle left");
-                }
-                else if(index === 3)
-                {
-                    //$('#'+elemID).attr("class", "carousel-item stack-middle right"); // 애니메이션 적용 전
-                    $('#'+elemID).attr("class", "carousel-item stack-top");
-                }
-                else if(index === 4)
-                {
-                    //$('#'+elemID).attr("class", "carousel-item stack-bottom right"); // 애니메이션 적용 전
-                    $('#'+elemID).attr("class", "carousel-item stack-middle right");
-                }
-                else
-                {
-                    //$('#'+elemID).attr("class", "carousel-item stack-hidden left"); // 애니메이션 적용 전
-                    $('#'+elemID).attr("class", "carousel-item stack-bottom right");
+                    if(index === 0)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-bottom left"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-hidden left out");
+
+                        setTimeout(function() {
+                            $('#'+elemID).attr("class", "carousel-item stack-hidden right");
+                        }, delay);
+
+                        setTimeout(function() {
+                            $('#'+elemID).attr("class", "carousel-item stack-bottom right");
+                        }, delay);
+
+                    }
+                    else if(index === 1)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-middle left"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-bottom left");
+
+                        setTimeout(function() {
+                            $('#'+elemID).attr("class", "carousel-item stack-hidden left out");
+                        }, delay);
+
+                        setTimeout(function() {
+                            $('#'+elemID).attr("class", "carousel-item stack-hidden right");
+                        }, delay);
+                    }
+                    else if(index === 2)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-top"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-middle left");
+
+                        setTimeout(function() {
+                            $('#'+elemID).attr("class", "carousel-item stack-bottom left");
+                        }, delay);
+                    }
+                    else if(index === 3)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-middle right"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-top");
+
+                        setTimeout(function() {
+                            $('#'+elemID).attr("class", "carousel-item stack-middle left");
+                        }, delay);
+                    }
+                    else if(index === 4)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-bottom right"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-middle right");
+
+                        setTimeout(function() {
+                            $('#'+elemID).attr("class", "carousel-item stack-top");
+                        }, delay);
+                    }
+                    else
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-hidden right"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-bottom right");
+
+                        setTimeout(function() {
+                            $('#'+elemID).attr("class", "carousel-item stack-middle right");
+                        }, delay);
+                    }
                 }
             }
-            else if(distance === 2)
+            else // 왼쪽 -> 오른쪽
             {
-                if(index === 0)
+                if(distance === 1)
                 {
-                    //$('#'+elemID).attr("class", "carousel-item stack-bottom left"); // 애니메이션 적용 전
-                    $('#'+elemID).attr("class", "carousel-item stack-hidden left out");
-
-                    setTimeout(function() {
-                        $('#'+elemID).attr("class", "carousel-item stack-hidden right");
-                    }, 200);
-
-                    setTimeout(function() {
-                        $('#'+elemID).attr("class", "carousel-item stack-bottom right");
-                    }, 200);
-
-                }
-                else if(index === 1)
-                {
-                    //$('#'+elemID).attr("class", "carousel-item stack-middle left"); // 애니메이션 적용 전
-                    $('#'+elemID).attr("class", "carousel-item stack-bottom left");
-
-                    setTimeout(function() {
-                        $('#'+elemID).attr("class", "carousel-item stack-hidden left out");
-                    }, 200);
-
-                    setTimeout(function() {
-                        $('#'+elemID).attr("class", "carousel-item stack-hidden right");
-                    }, 200);
-                }
-                else if(index === 2)
-                {
-                    //$('#'+elemID).attr("class", "carousel-item stack-top"); // 애니메이션 적용 전
-                    $('#'+elemID).attr("class", "carousel-item stack-middle left");
-
-                    setTimeout(function() {
-                        $('#'+elemID).attr("class", "carousel-item stack-bottom left");
-                    }, 200);
-                }
-                else if(index === 3)
-                {
-                    //$('#'+elemID).attr("class", "carousel-item stack-middle right"); // 애니메이션 적용 전
-                    $('#'+elemID).attr("class", "carousel-item stack-top");
-
-                    setTimeout(function() {
+                    if(index === 0)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-bottom left"); // 애니메이션 적용 전
                         $('#'+elemID).attr("class", "carousel-item stack-middle left");
-                    }, 200);
-                }
-                else if(index === 4)
-                {
-                    //$('#'+elemID).attr("class", "carousel-item stack-bottom right"); // 애니메이션 적용 전
-                    $('#'+elemID).attr("class", "carousel-item stack-middle right");
-
-                    setTimeout(function() {
+                    }
+                    else if(index === 1)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-middle left"); // 애니메이션 적용 전
                         $('#'+elemID).attr("class", "carousel-item stack-top");
-                    }, 200);
-                }
-                else
-                {
-                    //$('#'+elemID).attr("class", "carousel-item stack-hidden right"); // 애니메이션 적용 전
-                    $('#'+elemID).attr("class", "carousel-item stack-bottom right");
-
-                    setTimeout(function() {
+                    }
+                    else if(index === 2)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-top"); // 애니메이션 적용 전
                         $('#'+elemID).attr("class", "carousel-item stack-middle right");
-                    }, 200);
+                    }
+                    else if(index === 3)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-middle right"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-bottom right");
+                    }
+                    else if(index === 4)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-bottom right"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-hidden right");
+                    }
+                    else
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-hidden right"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-bottom left");
+                    }
+                }
+                else if(distance === 2)
+                {
+                    if(index === 0)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-bottom left"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-middle left");
+
+                        setTimeout(function() {
+                            $('#'+elemID).attr("class", "carousel-item stack-top");
+                        }, delay);
+                    }
+                    else if(index === 1)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-middle left"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-top");
+
+                        setTimeout(function() {
+                            $('#'+elemID).attr("class", "carousel-item stack-middle right");
+                        }, delay);
+                    }
+                    else if(index === 2)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-top"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-middle right");
+
+                        setTimeout(function() {
+                            $('#'+elemID).attr("class", "carousel-item stack-bottom right");
+                        }, delay);
+                    }
+                    else if(index === 3)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-middle right"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-bottom right");
+
+                        setTimeout(function() {
+                            $('#'+elemID).attr("class", "carousel-item stack-hidden right");
+                        }, delay);
+                    }
+                    else if(index === 4)
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-bottom right"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-hidden right");
+
+                        setTimeout(function() {
+                            $('#'+elemID).attr("class", "carousel-item stack-bottom left");
+                        }, delay);
+                    }
+                    else
+                    {
+                        //$('#'+elemID).attr("class", "carousel-item stack-hidden right"); // 애니메이션 적용 전
+                        $('#'+elemID).attr("class", "carousel-item stack-bottom left");
+
+                        setTimeout(function() {
+                            $('#'+elemID).attr("class", "carousel-item stack-middle left");
+                        }, delay);
+                    }
                 }
             }
         }
